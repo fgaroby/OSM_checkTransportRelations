@@ -9,16 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.windu2b.osm.check_transport_relations.data.DataSet;
-import org.windu2b.osm.check_transport_relations.data.Node;
-import org.windu2b.osm.check_transport_relations.data.OsmPrimitive;
-import org.windu2b.osm.check_transport_relations.data.OsmPrimitiveType;
-import org.windu2b.osm.check_transport_relations.data.PrimitiveId;
-import org.windu2b.osm.check_transport_relations.data.Relation;
-import org.windu2b.osm.check_transport_relations.data.RelationMember;
-import org.windu2b.osm.check_transport_relations.data.RelationMemberData;
-import org.windu2b.osm.check_transport_relations.data.SimplePrimitiveId;
-import org.windu2b.osm.check_transport_relations.data.Way;
+import org.windu2b.osm.check_transport_relations.data.osm.DataSet;
+import org.windu2b.osm.check_transport_relations.data.osm.Node;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
+import org.windu2b.osm.check_transport_relations.data.osm.PrimitiveId;
+import org.windu2b.osm.check_transport_relations.data.osm.Relation;
+import org.windu2b.osm.check_transport_relations.data.osm.RelationMember;
+import org.windu2b.osm.check_transport_relations.data.osm.RelationMemberData;
+import org.windu2b.osm.check_transport_relations.data.osm.SimplePrimitiveId;
+import org.windu2b.osm.check_transport_relations.data.osm.Way;
 
 /**
  * Abstract Reader, allowing other implementations than OsmReader (PbfReader in

@@ -18,7 +18,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 import java.util.AbstractSet;
 import java.util.Collection;

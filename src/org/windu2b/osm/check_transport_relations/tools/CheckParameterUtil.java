@@ -3,8 +3,8 @@ package org.windu2b.osm.check_transport_relations.tools;
 
 import java.text.MessageFormat;
 
-import org.windu2b.osm.check_transport_relations.data.OsmPrimitiveType;
-import org.windu2b.osm.check_transport_relations.data.PrimitiveId;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
+import org.windu2b.osm.check_transport_relations.data.osm.PrimitiveId;
 
 /**
  * This utility class provides a collection of static helper methods for

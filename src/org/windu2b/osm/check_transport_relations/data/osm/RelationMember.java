@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 /**
  * A linkage class that can be used by an relation to keep a list of members.

@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 import java.io.Serializable;
 import java.util.regex.Matcher;

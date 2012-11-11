@@ -1,12 +1,18 @@
 /**
  * 
  */
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
+import static org.windu2b.osm.check_transport_relations.tools.I18n.tr;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
+import org.windu2b.osm.check_transport_relations.io.IllegalDataException;
 import org.windu2b.osm.check_transport_relations.io.OsmServerObjectReader;
 import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
+import org.windu2b.osm.check_transport_relations.tools.Predicate;
+import org.windu2b.osm.check_transport_relations.tools.SubclassFilteredCollection;
 
 /**
  * @author windu
@@ -96,6 +102,55 @@ public class Node extends OsmPrimitive
 
 
 
+	public Collection<Relation> getRelations( String key )
+	        throws OsmTransferException
+	{
+		Collection<Relation> relations = new ArrayList<Relation>();
+		
+		for( Relation r : getRelations() )
+		{
+			if( r.isThisKind( key ) )
+				relations.add( r );
+		}
+		
+		return relations;
+	}
+
+
+
+
+	public Collection<Relation> getRelations( String key, String value )
+	        throws OsmTransferException
+	{
+		Collection<Relation> relations = new ArrayList<Relation>();
+		
+		for( Relation r : getRelations() )
+		{
+			if( r.isThisKind( key, value ) )
+				relations.add( r );
+		}
+		
+		return relations;
+	}
+
+
+
+
+	public Relation getRelation( String key, String value )
+	        throws OsmTransferException
+	{
+		for( Relation r : getRelations() )
+		{
+			if( r.isThisKind( key, value ) )
+				return r;
+		}
+		
+		return null;
+	}
+
+
+
+
 	@Override
 	public void load( PrimitiveData data )
 	{
@@ -118,14 +173,5 @@ public class Node extends OsmPrimitive
 	{
 		return "{Node id=" + getUniqueId() + " version=" + getVersion() + " "
 		        + "}";
-	}
-
-
-
-
-	public boolean isThisKindOfNode( String key, String value )
-	{
-		return this.getKeys().containsKey( key ) == true
-		        && this.getKeys().get( key ).equals( value ) == true;
 	}
 }

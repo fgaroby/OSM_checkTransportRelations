@@ -1,4 +1,4 @@
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 import java.util.List;
 
@@ -113,7 +113,7 @@ public class Relation extends OsmPrimitive
 	 */
 	public void setMembers( List<RelationMember> members )
 	{
-		if ( members != null )
+		if( members != null )
 		{
 			this.members = members.toArray( new RelationMember[members.size()] );
 		}
@@ -121,6 +121,24 @@ public class Relation extends OsmPrimitive
 		{
 			this.members = new RelationMember[0];
 		}
+	}
+
+
+
+
+	/**
+	 * Replies true if at least one child primitive is incomplete
+	 * 
+	 * @return true if at least one child primitive is incomplete
+	 */
+	public boolean hasIncompleteMembers()
+	{
+		RelationMember[] members = this.members;
+		for( RelationMember rm : members )
+		{
+			if( rm.getMember().isIncomplete() ) return true;
+		}
+		return false;
 	}
 
 

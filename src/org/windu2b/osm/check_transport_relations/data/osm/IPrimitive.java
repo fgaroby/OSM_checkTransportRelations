@@ -1,8 +1,7 @@
 // License: GPL. For details, see LICENSE file.
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 import java.util.Date;
-
 
 /**
  * IPrimitive captures the common functions of OsmPrimitive and PrimitiveData.
@@ -44,6 +43,12 @@ public interface IPrimitive extends Tagged, PrimitiveId
 
 
 
+
 	String getName();
+
+
+
+
+	boolean isModified();
 
 }

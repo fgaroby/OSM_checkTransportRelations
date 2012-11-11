@@ -14,7 +14,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import org.windu2b.osm.check_transport_relations.data.DataSet;
+import org.windu2b.osm.check_transport_relations.data.osm.DataSet;
 import org.windu2b.osm.check_transport_relations.gui.progress.ProgressMonitor;
 
 /**

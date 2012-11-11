@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.windu2b.osm.check_transport_relations.check.Check;
-import org.windu2b.osm.check_transport_relations.data.DataSet;
-import org.windu2b.osm.check_transport_relations.data.OsmPrimitiveType;
-import org.windu2b.osm.check_transport_relations.data.Relation;
+import org.windu2b.osm.check_transport_relations.data.osm.DataSet;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
+import org.windu2b.osm.check_transport_relations.data.osm.Relation;
 import org.windu2b.osm.check_transport_relations.io.OsmServerObjectReader;
 
 /**

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 import static org.windu2b.osm.check_transport_relations.tools.I18n.tr;
 
@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.windu2b.osm.check_transport_relations.data.PrimitiveData;
+import org.windu2b.osm.check_transport_relations.data.osm.PrimitiveData;
 
 /**
  * @author windu
@@ -62,6 +62,13 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 
 
 	protected int	           timestamp;
+
+
+	/**
+	 * This flag shows, that the properties have been changed by the user and on
+	 * upload the object will be send to the server.
+	 */
+	protected static final int	FLAG_MODIFIED	= 1 << 0;
 
 
 	/**
@@ -127,14 +134,14 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	{
 		setKeys( other.getKeys() );
 		id = other.id;
-		if ( id <= 0 )
+		if( id <= 0 )
 		{
 			// reset version and changeset id
 			version = 0;
 			changesetId = 0;
 		}
 		timestamp = other.timestamp;
-		if ( id > 0 )
+		if( id > 0 )
 		{
 			version = other.version;
 		}
@@ -258,10 +265,10 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	@Override
 	public void setOsmId( long id, int version )
 	{
-		if ( id <= 0 )
+		if( id <= 0 )
 		    throw new IllegalArgumentException( tr(
 		            "ID > 0 expected. Got {0}.", id ) );
-		if ( version <= 0 )
+		if( version <= 0 )
 		    throw new IllegalArgumentException( tr(
 		            "Version > 0 expected. Got {0}.", version ) );
 		this.id = id;
@@ -300,11 +307,11 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	public final String get( String key )
 	{
 		String[] keys = this.keys;
-		if ( key == null ) return null;
-		if ( keys == null ) return null;
-		for ( int i = 0; i < keys.length; i += 2 )
+		if( key == null ) return null;
+		if( keys == null ) return null;
+		for( int i = 0; i < keys.length; i += 2 )
 		{
-			if ( keys[i].equals( key ) ) return keys[i + 1];
+			if( keys[i].equals( key ) ) return keys[i + 1];
 		}
 		return null;
 	}
@@ -329,21 +336,21 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	public void put( String key, String value )
 	{
 		Map<String, String> originalKeys = getKeys();
-		if ( key == null )
+		if( key == null )
 			return;
-		else if ( value == null )
+		else if( value == null )
 		{
 			remove( key );
 		}
-		else if ( keys == null )
+		else if( keys == null )
 		{
 			keys = new String[] { key, value };
 		}
 		else
 		{
-			for ( int i = 0; i < keys.length; i += 2 )
+			for( int i = 0; i < keys.length; i += 2 )
 			{
-				if ( keys[i].equals( key ) )
+				if( keys[i].equals( key ) )
 				{
 					keys[i + 1] = value; // This modifies the keys array but it
 					                     // doesn't make it invalidate for any
@@ -352,7 +359,7 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 				}
 			}
 			String[] newKeys = new String[keys.length + 2];
-			for ( int i = 0; i < keys.length; i += 2 )
+			for( int i = 0; i < keys.length; i += 2 )
 			{
 				newKeys[i] = keys[i];
 				newKeys[i + 1] = keys[i + 1];
@@ -375,19 +382,19 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	@Override
 	public void remove( String key )
 	{
-		if ( key == null || keys == null ) return;
-		if ( !hasKey( key ) ) return;
+		if( key == null || keys == null ) return;
+		if( !hasKey( key ) ) return;
 		Map<String, String> originalKeys = getKeys();
-		if ( keys.length == 2 )
+		if( keys.length == 2 )
 		{
 			keys = null;
 			return;
 		}
 		String[] newKeys = new String[keys.length - 2];
 		int j = 0;
-		for ( int i = 0; i < keys.length; i += 2 )
+		for( int i = 0; i < keys.length; i += 2 )
 		{
-			if ( !keys[i].equals( key ) )
+			if( !keys[i].equals( key ) )
 			{
 				newKeys[j++] = keys[i];
 				newKeys[j++] = keys[i + 1];
@@ -405,7 +412,7 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	@Override
 	public void removeAll()
 	{
-		if ( keys != null )
+		if( keys != null )
 		{
 			Map<String, String> originalKeys = getKeys();
 			keys = null;
@@ -427,9 +434,9 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	{
 		Map<String, String> result = new HashMap<String, String>();
 		String[] keys = this.keys;
-		if ( keys != null )
+		if( keys != null )
 		{
-			for ( int i = 0; i < keys.length; i += 2 )
+			for( int i = 0; i < keys.length; i += 2 )
 			{
 				result.put( keys[i], keys[i + 1] );
 			}
@@ -453,14 +460,14 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	public void setKeys( Map<String, String> keys )
 	{
 		Map<String, String> originalKeys = getKeys();
-		if ( keys == null || keys.isEmpty() )
+		if( keys == null || keys.isEmpty() )
 		{
 			this.keys = null;
 			return;
 		}
 		String[] newKeys = new String[keys.size() * 2];
 		int index = 0;
-		for ( Entry<String, String> entry : keys.entrySet() )
+		for( Entry<String, String> entry : keys.entrySet() )
 		{
 			newKeys[index++] = entry.getKey();
 			newKeys[index++] = entry.getValue();
@@ -475,9 +482,9 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	public final Collection<String> keySet()
 	{
 		String[] keys = this.keys;
-		if ( keys == null ) return Collections.emptySet();
+		if( keys == null ) return Collections.emptySet();
 		Set<String> result = new HashSet<String>( keys.length / 2 );
-		for ( int i = 0; i < keys.length; i += 2 )
+		for( int i = 0; i < keys.length; i += 2 )
 		{
 			result.add( keys[i] );
 		}
@@ -513,11 +520,11 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 	public boolean hasKey( String key )
 	{
 		String[] keys = this.keys;
-		if ( key == null ) return false;
-		if ( keys == null ) return false;
-		for ( int i = 0; i < keys.length; i += 2 )
+		if( key == null ) return false;
+		if( keys == null ) return false;
+		for( int i = 0; i < keys.length; i += 2 )
 		{
-			if ( keys[i].equals( key ) ) return true;
+			if( keys[i].equals( key ) ) return true;
 		}
 		return false;
 	}
@@ -546,13 +553,33 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 
 
 
+	/**
+	 * Replies <code>true</code> if the object has been modified since it was
+	 * loaded from the server. In this case, on next upload, this object will be
+	 * updated.
+	 * 
+	 * Deleted objects are deleted from the server. If the objects are added
+	 * (id=0), the modified is ignored and the object is added to the server.
+	 * 
+	 * @return <code>true</code> if the object has been modified since it was
+	 *         loaded from the server
+	 */
+	@Override
+	public boolean isModified()
+	{
+		return ( flags & FLAG_MODIFIED ) != 0;
+	}
+
+
+
+
 	/*
 	 * ------- /* FLAGS /* ------
 	 */
 
 	protected void updateFlags( int flag, boolean value )
 	{
-		if ( value )
+		if( value )
 		{
 			flags |= flag;
 		}
@@ -560,6 +587,24 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 		{
 			flags &= ~flag;
 		}
+	}
+
+
+
+
+	public boolean isThisKind( String key )
+	{
+		return this.getKeys().containsKey( key ) == true;
+	}
+
+
+
+
+
+	public boolean isThisKind( String key, String value )
+	{
+		return this.getKeys().containsKey( key ) == true
+		        && this.getKeys().get( key ).equals( value ) == true;
 	}
 
 }

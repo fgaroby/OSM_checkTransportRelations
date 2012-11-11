@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 
-import org.windu2b.osm.check_transport_relations.data.DataSet;
-import org.windu2b.osm.check_transport_relations.data.OsmPrimitiveType;
-import org.windu2b.osm.check_transport_relations.data.PrimitiveId;
-import org.windu2b.osm.check_transport_relations.data.SimplePrimitiveId;
+import org.windu2b.osm.check_transport_relations.data.osm.DataSet;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
+import org.windu2b.osm.check_transport_relations.data.osm.PrimitiveId;
+import org.windu2b.osm.check_transport_relations.data.osm.SimplePrimitiveId;
 import org.windu2b.osm.check_transport_relations.gui.progress.NullProgressMonitor;
 import org.windu2b.osm.check_transport_relations.gui.progress.ProgressMonitor;
 import org.windu2b.osm.check_transport_relations.tools.CheckParameterUtil;

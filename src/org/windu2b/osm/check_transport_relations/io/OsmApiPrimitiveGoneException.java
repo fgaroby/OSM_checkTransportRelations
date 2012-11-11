@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.windu2b.osm.check_transport_relations.data.OsmPrimitiveType;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
 
 
 /**

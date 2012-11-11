@@ -1,4 +1,4 @@
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 import java.util.Arrays;
 import java.util.List;

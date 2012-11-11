@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 import static org.windu2b.osm.check_transport_relations.tools.I18n.tr;
 
@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.windu2b.osm.check_transport_relations.data.conflict.Conflict;
+import org.windu2b.osm.check_transport_relations.data.conflict.ConflictCollection;
+import org.windu2b.osm.check_transport_relations.gui.progress.ProgressMonitor;
 import org.windu2b.osm.check_transport_relations.tools.CheckParameterUtil;
 
 /**
@@ -105,70 +108,10 @@ public class DataSetMerger
 	protected void mergePrimitive( OsmPrimitive source,
 	        Collection<? extends OsmPrimitive> candidates )
 	{
-		if( !source.isNew() )
-		{
-			// try to merge onto a matching primitive with the same
-			// defined id
-			//
-			if( mergeById( source ) ) return;
-			// if (!source.isVisible())
-			// ignore it
-			// return;
-		}
-		else
-		{
-			// ignore deleted primitives from source
-			if( source.isDeleted() ) return;
-
-			// try to merge onto a primitive which has no id assigned
-			// yet but which is equal in its semantic attributes
-			//
-			for( OsmPrimitive target : candidates )
-			{
-				if( !target.isNew() || target.isDeleted() )
-				{
-					continue;
-				}
-				if( target.hasEqualSemanticAttributes( source ) )
-				{
-					mergedMap.put( source.getPrimitiveId(),
-					        target.getPrimitiveId() );
-					// copy the technical attributes from other
-					// version
-					target.setVisible( source.isVisible() );
-					target.setUser( source.getUser() );
-					target.setTimestamp( source.getTimestamp() );
-					target.setModified( source.isModified() );
-					objectsWithChildrenToMerge.add( source.getPrimitiveId() );
-					return;
-				}
-			}
-		}
-
-		// If we get here we didn't find a suitable primitive in
-		// the target dataset. Create a clone and add it to the target dataset.
+		// try to merge onto a matching primitive with the same
+		// defined id
 		//
-		OsmPrimitive target = null;
-		switch( source.getType() )
-		{
-			case NODE :
-				target = source.isNew() ? new Node()
-				        : new Node( source.getId() );
-				break;
-			case WAY :
-				target = source.isNew() ? new Way() : new Way( source.getId() );
-				break;
-			case RELATION :
-				target = source.isNew() ? new Relation() : new Relation(
-				        source.getId() );
-				break;
-			default :
-				throw new AssertionError();
-		}
-		target.mergeFrom( source );
-		targetDataSet.addPrimitive( target );
-		mergedMap.put( source.getPrimitiveId(), target.getPrimitiveId() );
-		objectsWithChildrenToMerge.add( source.getPrimitiveId() );
+		if( mergeById( source ) ) return;
 	}
 
 
@@ -237,93 +180,6 @@ public class DataSetMerger
 				mergeRelationMembers( r );
 			}
 		}
-
-		deleteMarkedObjects();
-	}
-
-
-
-
-	/**
-	 * Deleted objects in objectsToDelete set and create conflicts for objects
-	 * that cannot be deleted because they're referenced in the target dataset.
-	 */
-	protected void deleteMarkedObjects()
-	{
-		boolean flag;
-		do
-		{
-			flag = false;
-			for( Iterator<OsmPrimitive> it = objectsToDelete.iterator(); it
-			        .hasNext(); )
-			{
-				OsmPrimitive target = it.next();
-				OsmPrimitive source = sourceDataSet.getPrimitiveById( target
-				        .getPrimitiveId() );
-				if( source == null )
-				    throw new RuntimeException(
-				            tr( "Object of type {0} with id {1} was marked to be deleted, but it''s missing in the source dataset",
-				                    target.getType(), target.getUniqueId() ) );
-
-				List<OsmPrimitive> referrers = target.getReferrers();
-				if( referrers.isEmpty() )
-				{
-					resetPrimitive( target );
-					target.mergeFrom( source );
-					target.setDeleted( true );
-					it.remove();
-					flag = true;
-				}
-				else
-				{
-					for( OsmPrimitive referrer : referrers )
-					{
-						// If one of object referrers isn't going to be deleted,
-						// add a conflict and don't delete the object
-						if( !objectsToDelete.contains( referrer ) )
-						{
-							addConflict( target, source );
-							it.remove();
-							flag = true;
-							break;
-						}
-					}
-				}
-
-			}
-		}
-		while( flag );
-
-		if( !objectsToDelete.isEmpty() )
-		{
-			// There are some more objects rest in the objectsToDelete set
-			// This can be because of cross-referenced relations.
-			for( OsmPrimitive osm : objectsToDelete )
-			{
-				resetPrimitive( osm );
-			}
-			for( OsmPrimitive osm : objectsToDelete )
-			{
-				osm.setDeleted( true );
-				osm.mergeFrom( sourceDataSet.getPrimitiveById( osm
-				        .getPrimitiveId() ) );
-			}
-		}
-	}
-
-
-
-
-	private final void resetPrimitive( OsmPrimitive osm )
-	{
-		if( osm instanceof Way )
-		{
-			( ( Way ) osm ).setNodes( null );
-		}
-		else if( osm instanceof Relation )
-		{
-			( ( Relation ) osm ).setMembers( null );
-		}
 	}
 
 
@@ -356,13 +212,6 @@ public class DataSetMerger
 			if( targetNode != null )
 			{
 				newNodes.add( targetNode );
-				if( targetNode.isDeleted()
-				        && !conflicts.hasConflictForMy( targetNode ) )
-				{
-					addConflict( new Conflict<OsmPrimitive>( targetNode,
-					        sourceNode, true ) );
-					targetNode.setDeleted( false );
-				}
 			}
 			else throw new IllegalStateException( tr(
 			        "Missing merge target for node with id {0}",
@@ -406,13 +255,6 @@ public class DataSetMerger
 			RelationMember newMember = new RelationMember(
 			        sourceMember.getRole(), targetMember );
 			newMembers.add( newMember );
-			if( targetMember.isDeleted()
-			        && !conflicts.hasConflictForMy( targetMember ) )
-			{
-				addConflict( new Conflict<OsmPrimitive>( targetMember,
-				        sourceMember.getMember(), true ) );
-				targetMember.setDeleted( false );
-			}
 		}
 		target.setMembers( newMembers );
 	}
@@ -465,55 +307,6 @@ public class DataSetMerger
 			//
 		}
 		else if( !target.isModified() && !source.isModified()
-		        && target.isVisible() != source.isVisible()
-		        && target.getVersion() == source.getVersion() )
-			// Same version, but different "visible" attribute and neither of
-			// them are modified.
-			// It indicates a serious problem in datasets.
-			// For example, datasets can be fetched from different OSM servers
-			// or badly hand-modified.
-			// We shouldn't merge that datasets.
-			throw new DataIntegrityProblemException(
-			        tr( "Conflict in ''visible'' attribute for object of type {0} with id {1}",
-			                target.getType(), target.getId() ) );
-		else if( target.isDeleted() && !source.isDeleted()
-		        && target.getVersion() == source.getVersion() )
-		{
-			// same version, but target is deleted. Assume target takes
-			// precedence
-			// otherwise too many conflicts when refreshing from the server
-			// but, if source has a referrer that is not in the target dataset
-			// there is a conflict
-			// If target dataset refers to the deleted primitive, conflict will
-			// be added in fixReferences method
-			for( OsmPrimitive referrer : source.getReferrers() )
-			{
-				if( targetDataSet.getPrimitiveById( referrer.getPrimitiveId() ) == null )
-				{
-					addConflict( new Conflict<OsmPrimitive>( target, source,
-					        true ) );
-					target.setDeleted( false );
-					break;
-				}
-			}
-		}
-		else if( !target.isModified() && source.isDeleted() )
-		{
-			// target not modified. We can assume that source is the most recent
-			// version,
-			// so mark it to be deleted.
-			//
-			objectsToDelete.add( target );
-		}
-		else if( !target.isModified() && source.isModified() )
-		{
-			// target not modified. We can assume that source is the most recent
-			// version.
-			// clone it into target.
-			target.mergeFrom( source );
-			objectsWithChildrenToMerge.add( source.getPrimitiveId() );
-		}
-		else if( !target.isModified() && !source.isModified()
 		        && target.getVersion() == source.getVersion() )
 		{
 			// both not modified. Merge nevertheless.
@@ -528,32 +321,6 @@ public class DataSetMerger
 			//
 			target.mergeFrom( source );
 			objectsWithChildrenToMerge.add( source.getPrimitiveId() );
-		}
-		else if( target.isModified() && !source.isModified()
-		        && target.getVersion() == source.getVersion() )
-		{
-			// target is same as source but target is modified
-			// => keep target and reset modified flag if target and source are
-			// semantically equal
-			if( target.hasEqualSemanticAttributes( source ) )
-			{
-				target.setModified( false );
-			}
-		}
-		else if( source.isDeleted() != target.isDeleted() )
-		{
-			// target is modified and deleted state differs.
-			// this have to be resolved manually.
-			//
-			addConflict( target, source );
-		}
-		else if( !target.hasEqualSemanticAttributes( source ) )
-		{
-			// target is modified and is not semantically equal with source.
-			// Can't automatically
-			// resolve the differences
-			// => create a conflict
-			addConflict( target, source );
 		}
 		else
 		{

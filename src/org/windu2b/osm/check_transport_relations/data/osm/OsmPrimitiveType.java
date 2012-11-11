@@ -1,5 +1,5 @@
 // License: GPL. For details, see LICENSE file.
-package org.windu2b.osm.check_transport_relations.data;
+package org.windu2b.osm.check_transport_relations.data.osm;
 
 import static org.windu2b.osm.check_transport_relations.tools.I18n.tr;
 
