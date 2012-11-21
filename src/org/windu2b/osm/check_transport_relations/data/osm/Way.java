@@ -73,7 +73,7 @@ public class Way extends OsmPrimitive implements IWay
 	@Override
 	public int compareTo( OsmPrimitive o )
 	{
-		if ( o instanceof Relation ) return 1;
+		if( o instanceof Relation ) return 1;
 		return o instanceof Way ? Long.valueOf( getUniqueId() ).compareTo(
 		        o.getUniqueId() ) : -1;
 	}
@@ -118,9 +118,9 @@ public class Way extends OsmPrimitive implements IWay
 	public boolean hasIncompleteNodes()
 	{
 		Node[] nodes = this.nodes;
-		for ( Node node : nodes )
+		for( Node node : nodes )
 		{
-			if ( node.isIncomplete() ) return true;
+			if( node.isIncomplete() ) return true;
 		}
 		return false;
 	}
@@ -229,7 +229,7 @@ public class Way extends OsmPrimitive implements IWay
 		boolean locked = writeLock();
 		try
 		{
-			if ( nodes == null )
+			if( nodes == null )
 			{
 				this.nodes = new Node[0];
 			}
@@ -247,11 +247,31 @@ public class Way extends OsmPrimitive implements IWay
 
 
 
+	/**
+	 * Checks if the way contains the Node <code>node</code>
+	 * 
+	 * @param node
+	 *            The node to be contained in this way
+	 * @return <code>true</code> if this way contains the node.
+	 *         <code>false</code> otherwise
+	 */
+	public boolean contains( Node node )
+	{
+		for( Node n : this.nodes )
+			if( n.equals( node ) ) return true;
+
+		return false;
+	}
+
+
+
+
 	@Override
 	public String toString()
 	{
 		String nodesDesc = "nodes=" + Arrays.toString( nodes );
+		String tagsDesc = "tags=" + getKeys();
 		return "{Way id=" + getUniqueId() + " version=" + getVersion() + " "
-		        + nodesDesc + "}";
+		        + nodesDesc + tagsDesc + "}";
 	}
 }

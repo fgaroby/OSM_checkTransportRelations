@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +52,6 @@ public class DataSetMerger
 	private final Set<PrimitiveId>	            objectsWithChildrenToMerge;
 
 
-	private final Set<OsmPrimitive>	            objectsToDelete;
-
-
 
 
 	/**
@@ -81,7 +77,6 @@ public class DataSetMerger
 		conflicts = new ConflictCollection();
 		mergedMap = new HashMap<PrimitiveId, PrimitiveId>();
 		objectsWithChildrenToMerge = new HashSet<PrimitiveId>();
-		objectsToDelete = new HashSet<OsmPrimitive>();
 	}
 
 

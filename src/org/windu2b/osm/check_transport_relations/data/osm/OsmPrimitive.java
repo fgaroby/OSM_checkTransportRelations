@@ -4,9 +4,14 @@
 package org.windu2b.osm.check_transport_relations.data.osm;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.windu2b.osm.check_transport_relations.data.osm.DataIntegrityProblemException;
 import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive;
+import org.windu2b.osm.check_transport_relations.io.OsmServerBackreferenceReader;
+import org.windu2b.osm.check_transport_relations.io.OsmServerReader;
+import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
 import org.windu2b.osm.check_transport_relations.tools.CheckParameterUtil;
 import org.windu2b.osm.check_transport_relations.tools.Predicate;
 
@@ -101,7 +106,7 @@ public abstract class OsmPrimitive extends AbstractPrimitive implements
 			this.id = id;
 		}
 		this.version = 0;
-		this.setIncomplete( id > 0 );
+		this.setIncomplete( true );
 	}
 
 
@@ -127,7 +132,7 @@ public abstract class OsmPrimitive extends AbstractPrimitive implements
 	{
 		this( id );
 		this.version = version;
-		setIncomplete( false );
+		setIncomplete( true );
 	}
 
 
@@ -272,6 +277,104 @@ public abstract class OsmPrimitive extends AbstractPrimitive implements
 		setTimestamp( data.getTimestamp() );
 		setIncomplete( data.isIncomplete() );
 		version = data.getVersion();
+	}
+
+
+
+
+	protected DataSet loadRelations() throws OsmTransferException
+	{
+		/*if( isIncomplete() )
+		{*/
+			OsmServerReader reader = new OsmServerBackreferenceReader( getId(),
+			        this.getType(), true );
+			DataSet ds = reader.parseOsm( null );
+
+			if( getDataSet() != null )
+			{
+				DataSetMerger dm = new DataSetMerger( getDataSet(), ds );
+				dm.merge();
+			}
+			this.setIncomplete( false );
+
+			return ds;
+		/*}
+
+		return getDataSet();*/
+	}
+
+
+
+
+	public Collection<Relation> getRelations( String key )
+	        throws OsmTransferException
+	{
+		loadRelations();
+
+		Collection<Relation> relations = new ArrayList<Relation>();
+
+		for( Relation r : getDataSet().getRelations() )
+		{
+			if( r.isThisKind( key ) ) relations.add( r );
+		}
+
+		return relations;
+	}
+
+
+
+
+	public Collection<Relation> getRelations( String key, String value )
+	        throws OsmTransferException
+	{
+		loadRelations();
+
+		Collection<Relation> relations = new ArrayList<Relation>();
+
+		for( Relation r : getDataSet().getRelations() )
+		{
+			if( r.isThisKind( key, value ) ) relations.add( r );
+		}
+
+		return relations;
+	}
+
+
+
+
+	public Relation getRelation( String key, String value )
+	        throws OsmTransferException
+	{
+		loadRelations();
+
+		for( Relation r : getDataSet().getRelations() )
+		{
+			if( r.isThisKind( key, value ) ) return r;
+		}
+
+		return null;
+	}
+
+
+
+
+	public Relation getRelation( TagCollection tagCollection )
+	        throws OsmTransferException
+	{
+		DataSet ds = loadRelations();
+		Relation relation = null;
+		for( Relation r : ds.getRelations() )
+		{
+			for( Tag t : tagCollection )
+			{
+				if( r.hasKeyValue( t.getKey(), t.getValue() ) )
+				{
+					relation = r;
+				}
+			}
+		}
+
+		return relation;
 	}
 
 

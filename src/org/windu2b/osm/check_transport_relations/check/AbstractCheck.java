@@ -19,4 +19,29 @@ public abstract class AbstractCheck implements ICheck
 		this.check = check;
 	}
 
+
+
+
+	/**
+	 * @return the check
+	 */
+	@Override
+	public Check getCheck()
+	{
+		return check;
+	}
+
+
+
+
+	/**
+	 * @param check
+	 *            the check to set
+	 */
+	@Override
+	public void setCheck( Check check )
+	{
+		this.check = check;
+	}
+
 }

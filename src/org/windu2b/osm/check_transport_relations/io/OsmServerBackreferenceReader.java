@@ -396,25 +396,8 @@ public class OsmServerBackreferenceReader extends OsmServerReader
 		}
 		try
 		{
-			progressMonitor.beginTask( null, 3 );
-			DataSet ret = new DataSet();
-			if( primitiveType.equals( OsmPrimitiveType.NODE ) )
-			{
-				DataSet ds = getReferringWays( progressMonitor
-				        .createSubTaskMonitor( 1, false ) );
-				DataSetMerger visitor = new DataSetMerger( ret, ds );
-				visitor.merge();
-				ret = visitor.getTargetDataSet();
-			}
-			DataSet ds = getReferringRelations( progressMonitor
-			        .createSubTaskMonitor( 1, false ) );
-			DataSetMerger visitor = new DataSetMerger( ret, ds );
-			visitor.merge();
-			ret = visitor.getTargetDataSet();
-			readIncompletePrimitives( ret,
-			        progressMonitor.createSubTaskMonitor( 1, false ) );
-
-			return ret;
+			return getReferringRelations( progressMonitor.createSubTaskMonitor(
+			        1, false ) );
 		}
 		finally
 		{

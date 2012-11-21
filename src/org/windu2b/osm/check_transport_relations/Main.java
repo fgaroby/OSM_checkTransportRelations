@@ -36,7 +36,8 @@ public class Main
 			Collection<Relation> cRelations = ds.getRelations();
 			for ( Relation r : cRelations )
 			{
-				Check.checkRelation( r );
+				Check c = new Check( r );
+				c.check();
 			}
 		}
 		catch ( Exception e )

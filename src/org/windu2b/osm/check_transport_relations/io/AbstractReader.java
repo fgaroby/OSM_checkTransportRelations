@@ -128,10 +128,10 @@ public abstract class AbstractReader
 			w.setNodes( wayNodes );
 			if ( w.hasIncompleteNodes() )
 			{
-				System.out
+				/*System.out
 				        .println( tr(
 				                "Way {0} with {1} nodes has incomplete nodes because at least one node was missing in the loaded data.",
-				                externalWayId, w.getNodesCount() ) );
+				                externalWayId, w.getNodesCount() ) );*/
 			}
 			ds.addPrimitive( w );
 		}

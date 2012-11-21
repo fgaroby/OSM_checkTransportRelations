@@ -533,6 +533,25 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 
 
 	/**
+	 * Replies true if this primitive has a tag with key <code>key</code> AND a
+	 * if this tag has the value <code>value</code>.
+	 * 
+	 * @param key
+	 *            the key
+	 * @return true, if his primitive has a tag with key <code>key</code> AND a
+	 *         if this tag has the value <code>value</code>
+	 */
+	public boolean hasKeyValue( String key, String value )
+	{
+		if( hasKey( key ) )
+			return get( key ).equals( value );
+		else return false;
+	}
+
+
+
+
+	/**
 	 * If set to true, this object is incomplete, which means only the id and
 	 * type is known (type is the objects instance class)
 	 */
@@ -600,11 +619,20 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 
 
 
-
 	public boolean isThisKind( String key, String value )
 	{
-		return this.getKeys().containsKey( key ) == true
-		        && this.getKeys().get( key ).equals( value ) == true;
+		return this.getKeys().containsKey( key )
+		        && this.getKeys().get( key ).equals( value );
+	}
+
+
+
+
+	public boolean isThisKing( Tag tag )
+	{
+		if( tag.getValue() != null && !tag.getValue().isEmpty() )
+			return this.isThisKind( tag.getKey(), tag.getValue() );
+		else return this.isThisKind( tag.getKey() );
 	}
 
 }

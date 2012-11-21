@@ -161,4 +161,21 @@ public class Relation extends OsmPrimitive
 		return OsmPrimitiveType.RELATION;
 	}
 
+
+
+
+	@Override
+	public String toString()
+	{
+		StringBuffer sb = new StringBuffer();
+		sb.append( "{Relation id=" + getUniqueId() + " version=" + getVersion() + " [" );
+		for( RelationMember rm : this.getMembers() )
+		{
+			OsmPrimitive member = rm.getMember();
+			sb.append( member.getDisplayType() ).append( "(" ).append( member.getId() ).append( ")" );
+		}
+		
+		return sb.toString();
+	}
+
 }
