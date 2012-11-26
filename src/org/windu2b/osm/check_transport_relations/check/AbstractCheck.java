@@ -59,14 +59,14 @@ public abstract class AbstractCheck implements ICheck
 	{
 		if( rm.getType().equals( OsmPrimitiveType.NODE ) )
 		{
-			return this.check.setState( this.check.cStopPosition ).check( rm );
+			return this.check.setState( this.check.cStopPosition ).check( rm.getMember() );
 		}
 
 		else if( rm.getType().equals( OsmPrimitiveType.WAY ) )
 		{
 			if( !rm.hasRole() )
 			{
-				return this.check.setState( this.check.cWay ).check( rm );
+				return this.check.setState( this.check.cWay ).check( rm.getMember() );
 			}
 			else if( !rm.getRole().equals( "platform" ) )
 			{
