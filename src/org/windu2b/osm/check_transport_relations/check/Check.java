@@ -14,19 +14,19 @@ import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
  */
 public class Check
 {
-	ICheck	 start;
+	ICheck	 cWay;
 
 
-	ICheck	 way;
+	ICheck	 cStopPosition;
 
 
-	ICheck	 stop_position;
+	ICheck	 cPlatform;
 
 
-	ICheck	 platform;
+	ICheck	 cState;
 
 
-	ICheck	 state;
+	ICheck	 cPublicTransport;
 
 
 	Relation	relation;
@@ -36,11 +36,12 @@ public class Check
 
 	public Check()
 	{
-		this.way = new CheckWay( this );
-		this.stop_position = new CheckStopPosition( this );
-		this.platform = new CheckPlatform( this );
+		this.cWay = new CheckWay( this );
+		this.cStopPosition = new CheckStopPosition( this );
+		this.cPlatform = new CheckPlatform( this );
+		this.cPublicTransport = new CheckPublicTransport( this );
 
-		this.state = this.way;
+		this.cState = this.cPublicTransport;
 
 	}
 
@@ -82,9 +83,9 @@ public class Check
 
 	public ICheck setState( ICheck state )
 	{
-		this.state = state;
-		
-		return this.state;
+		this.cState = state;
+
+		return this.cState;
 	}
 
 
@@ -92,17 +93,7 @@ public class Check
 
 	public ICheck getState()
 	{
-		return this.state;
-	}
-
-
-
-
-	public void check( Relation r ) throws IllegalDataException,
-	        OsmTransferException
-	{
-		this.setRelation( r );
-		check();
+		return this.cState;
 	}
 
 
@@ -112,7 +103,7 @@ public class Check
 	{
 		for( RelationMember rm : this.relation.getMembers() )
 		{
-			this.state.check( rm );
+			this.cState.check( rm );
 
 		}
 	}
