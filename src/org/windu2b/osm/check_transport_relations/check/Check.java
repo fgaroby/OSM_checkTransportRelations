@@ -99,12 +99,9 @@ public class Check
 
 
 
-	public void check() throws IllegalDataException, OsmTransferException
+	public boolean check() throws OsmTransferException
 	{
-		for( RelationMember rm : this.relation.getMembers() )
-		{
-			this.cState.check( rm );
+		return this.cState.check( this.relation );
 
-		}
 	}
 }

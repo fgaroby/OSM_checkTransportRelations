@@ -5,8 +5,7 @@ package org.windu2b.osm.check_transport_relations.check;
 
 import static org.windu2b.osm.check_transport_relations.tools.I18n.tr;
 
-import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
-import org.windu2b.osm.check_transport_relations.data.osm.RelationMember;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive;
 import org.windu2b.osm.check_transport_relations.data.osm.Way;
 import org.windu2b.osm.check_transport_relations.io.Log;
 import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
@@ -32,43 +31,38 @@ public class CheckWay extends AbstractCheck
 	 * @see org.windu2b.osm.check_transport_relations.check.ICheck#check()
 	 */
 	@Override
-	public boolean check( RelationMember rm ) throws OsmTransferException
+	public boolean check( OsmPrimitive op ) throws OsmTransferException
 	{
-		if( rm.getDisplayType() == OsmPrimitiveType.WAY )
-		{
-			LastElements.setLastStopPosition( null );
-			Way way = ( Way ) rm.getMember();
+		LastElements.setLastStopPosition( null );
+		Way way = ( Way ) op;
 
-			Way lastWay = LastElements.getLastWay();
-			if( lastWay != null )
+		Way lastWay = LastElements.getLastWay();
+		if( lastWay != null )
+		{
+			/**
+			 * Si le précédent way et l'actuel n'ont ni leur premier ni leur
+			 * dernier point en commun => ils ne sont pas adjacents On lève
+			 * alors une exception
+			 * 
+			 * @TODO : n'envoyer qu'un message d'erreur et continuer le
+			 *       traitement
+			 */
+			if( !areContiguousWays( way, lastWay ) )
 			{
-				/**
-				 * Si le précédent way et l'actuel n'ont ni leur premier ni leur
-				 * dernier point en commun => ils ne sont pas adjacents On lève
-				 * alors une exception
-				 * 
-				 * @TODO : n'envoyer qu'un message d'erreur et continuer le
-				 *       traitement
-				 */
-				if( !areContiguousWays( way, lastWay ) )
-				{
-					// On pointe tout de même sur le 'way' en cours, pour éviter de provoquer des erreurs en cascade
-					LastElements.setLastWay( way );
-				
-					Log.log( tr( "Ways {0} and {1} are not adjacent",
-					        lastWay.getId(), way.getId() ) );
+				// On pointe tout de même sur le 'way' en cours, pour éviter
+				// de provoquer des erreurs en cascade
+				LastElements.setLastWay( way );
 
-					return false;
-				}
+				Log.log( tr( "[{0}]Ways {1} and {2} are not adjacent",
+				        CheckWay.class.getSimpleName(), lastWay.getId(),
+				        way.getId() ) );
+
+				return false;
 			}
+		}
 
-			// On pointe sur le 'way' en cours
-			LastElements.setLastWay( way );
-		}
-		else
-		{
-			return this.check.setState( this.check.stop_position ).check( rm );
-		}
+		// On pointe sur le 'way' en cours
+		LastElements.setLastWay( way );
 
 		return true;
 	}

@@ -10,7 +10,6 @@ import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive;
 import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
 import org.windu2b.osm.check_transport_relations.data.osm.PublicTransport;
 import org.windu2b.osm.check_transport_relations.data.osm.Relation;
-import org.windu2b.osm.check_transport_relations.data.osm.RelationMember;
 import org.windu2b.osm.check_transport_relations.data.osm.Way;
 import org.windu2b.osm.check_transport_relations.io.Log;
 import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
@@ -36,10 +35,8 @@ public class CheckStopPosition extends AbstractCheck
 	 * @see org.windu2b.osm.check_transport_relations.check.ICheck#check()
 	 */
 	@Override
-	public boolean check( RelationMember rm ) throws OsmTransferException
+	public boolean check( OsmPrimitive op ) throws OsmTransferException
 	{
-		OsmPrimitive op = rm.getMember();
-
 		// Si le membre en cours est un 'node'
 		if( op.getDisplayType() == OsmPrimitiveType.NODE )
 		{
@@ -102,7 +99,8 @@ public class CheckStopPosition extends AbstractCheck
 			 */
 			else if( !lastWay.contains( node ) )
 			{
-				Log.log( tr( "The way {0} doesn't contain the node {1} !",
+				Log.log( tr( "[{0}]The way {1} doesn't contain the node {2} !",
+				        CheckStopPosition.class.getSimpleName(),
 				        lastWay.getId(), node.getId() ) );
 
 				return false;
@@ -110,43 +108,44 @@ public class CheckStopPosition extends AbstractCheck
 			else if( lastWay.getLastNode().equals( node ) )
 			{
 				Log.log( tr(
-				        "The node {0} hasn't to be the last node of the way {1} !",
-				        node.getId(), lastWay.getId() ) );
+				        "[{0}]The node {1} hasn't to be the last node of the way {2} !",
+				        CheckStopPosition.class.getSimpleName(), node.getId(),
+				        lastWay.getId() ) );
 
 				return false;
 			}
 
 			// On récupère la relation 'stop_area' à laquelle appartient ce
 			// 'stop_position'
-			Relation stopArea = PublicTransport.loadStopArea( op );
+			Relation stopArea = PublicTransport.getStopAreaRelation( op );
 
 			// Si aucune 'stop_area' n'a été trouvée
 			if( stopArea == null )
 			{
 				Log.log( tr(
-				        "No 'stop_area' relation found for the 'stop_position node {0}!",
-				        op.getId() ) );
+				        "[{0}]No stop_area relation found for the stop_position node {1}!",
+				        CheckStopPosition.class.getSimpleName(), op.getId() ) );
 			}
 			LastElements.setLastStopArea( stopArea );
 
 			// On pointe sur le 'stop_position' en cours
 			LastElements.setLastStopPosition( node );
 
-			this.check.setState( this.check.platform );
+			this.check.setState( this.check.cPlatform );
 		}
 		// Error cases
 		else
 		{
 			Log.log( tr(
-			        "The {0} {1} is not a 'public_transport='stop_position",
+			        "[{0}]The {1} {2} is not a public_transport=stop_position relation",
+			        CheckStopPosition.class.getSimpleName(),
 			        op.getDisplayType(), op.getId() ) );
 
 			return false;
 		}
 
-		this.check.setState( this.check.platform );
+		this.check.setState( this.check.cPlatform );
 
 		return true;
 	}
-
 }
