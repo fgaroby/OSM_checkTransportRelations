@@ -11,6 +11,7 @@ import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
 import org.windu2b.osm.check_transport_relations.data.osm.PublicTransport;
 import org.windu2b.osm.check_transport_relations.data.osm.Relation;
 import org.windu2b.osm.check_transport_relations.data.osm.Way;
+import org.windu2b.osm.check_transport_relations.data.osm.Way.Direction;
 import org.windu2b.osm.check_transport_relations.io.Log;
 import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
 
@@ -37,65 +38,57 @@ public class CheckStopPosition extends AbstractCheck
 	@Override
 	public boolean check( OsmPrimitive op ) throws OsmTransferException
 	{
-		// Si le membre en cours est un 'node'
+		/*
+		 * Is this a 'node' ?
+		 */
 		if( op.getDisplayType() == OsmPrimitiveType.NODE )
 		{
 			Node node = ( Node ) op;
 			Node lastStopPosition = LastElements.getLastStopPosition();
 			Way lastWay = LastElements.getLastWay();
 
-			// S'il s'agit du premier node après un 'way'
-			if( lastStopPosition == null )
+			/*
+			 * Is it a 'public_transport=stop_position' type ?
+			 */
+			if( PublicTransport.isStopPosition( node ) )
 			{
-				// Est-il bien de type 'public_transport=stop_position' ?
-				if( !PublicTransport.isStopPosition( node ) )
+				// Is it the first node after 'way' (or after a previous
+				// 'platform') ?
+				if( lastStopPosition != null )
 				{
 					Log.log( tr(
-					        "The node {0} is not a 'public_transport=stop_position'",
-					        node.getId() ) );
+					        "[{0}]No consecutive 'public_transport=stop_position' nodes allowed ! Node {1} is after node {2}",
+					        CheckStopPosition.class.getSimpleName(),
+					        node.getId(), lastStopPosition.getId() ) );
 
 					return false;
 				}
 			}
 			/*
-			 * Si c'est un nouveau 'stop_position' => on vérifie qu'il n'y a pas
-			 * 2 'stop_position' qui se suivent immédiatement
+			 * Anything else ? Error
 			 */
-			else if( lastStopPosition.isThisKind( "public_transport",
-			        "stop_position" )
-			        && node.isThisKind( "public_transport", "stop_position" ) )
-			{
-				Log.log( tr(
-				        "No consecutive 'public_transport=stop_position' nodes allowed ! Node {0} is after node {1}",
-				        node.getId(), lastStopPosition.getId() ) );
-
-				return false;
-			}
-			// C'est autre chose => erreur
 			else
 			{
 				Log.log( tr(
-				        "The node {0} is not a 'public_transport='stop_position",
-				        node.getId() ) );
+				        "[{0}]}The node {1} is not a public_transport=stop_position",
+				        CheckStopPosition.class.getSimpleName(), node.getId() ) );
 
 				return false;
 			}
 
 			/*
-			 * On vérifie qu'au moins un 'way' a bien été rencontré AVANT le
-			 * 'stop_position'
+			 * Is there at least one 'way' BEFORE this 'stop_position' ?
 			 */
 			if( lastWay == null )
 			{
-				Log.log( tr( "No way was found before the node {0} !",
-				        node.getId() ) );
+				Log.log( tr( "[{0}]No way was found before the node {1} !",
+				        CheckStopPosition.class.getSimpleName(), node.getId() ) );
 
 				return false;
 			}
 
 			/*
-			 * On vérifie que le 'stop_position' se trouve sur le dernier 'way'
-			 * parcouru
+			 * Is this 'stop_position' node on the last 'way' ?
 			 */
 			else if( !lastWay.contains( node ) )
 			{
@@ -105,16 +98,46 @@ public class CheckStopPosition extends AbstractCheck
 
 				return false;
 			}
-			else if( lastWay.getLastNode().equals( node ) )
+			/*
+			 * Is this node not the last/first node of the last way ?
+			 */
+			switch( lastWay.getDirection() )
 			{
-				Log.log( tr(
-				        "[{0}]The node {1} hasn't to be the last node of the way {2} !",
-				        CheckStopPosition.class.getSimpleName(), node.getId(),
-				        lastWay.getId() ) );
+				case FORWARD :
+					if( lastWay.getLastNode().equals( node ) )
+					{
+						Log.log( tr(
+						        "[{0}]The node {1} has not to be the last node of the forward-direction way {2} !",
+						        CheckStopPosition.class.getSimpleName(),
+						        node.getId(), lastWay.getId() ) );
 
-				return false;
+						return false;
+					}
+				break;
+
+				case BACKWARD :
+					if( lastWay.getFirstNode().equals( node ) )
+					{
+						Log.log( tr(
+						        "[{0}]The node {1} has not to be the first node of the backward-direction way {2} !",
+						        CheckStopPosition.class.getSimpleName(),
+						        node.getId(), lastWay.getId() ) );
+
+						return false;
+					}
+				break;
+
+				// Cas où la direction de 'lastWay' n'avait pas été
+				// préalablement définie (premier way, ou coupure dans la
+				// continuité)
+				default :
+					if( lastWay.getLastNode().equals( node ) )
+						lastWay.setDirection( Direction.BACKWARD );
+					else
+						lastWay.setDirection( Direction.FORWARD );
+				break;
+
 			}
-
 			// On récupère la relation 'stop_area' à laquelle appartient ce
 			// 'stop_position'
 			Relation stopArea = PublicTransport.getStopAreaRelation( op );
@@ -133,7 +156,9 @@ public class CheckStopPosition extends AbstractCheck
 
 			this.check.setState( this.check.cPlatform );
 		}
-		// Error cases
+		/*
+		 * Not a node ? Error !
+		 */
 		else
 		{
 			Log.log( tr(
