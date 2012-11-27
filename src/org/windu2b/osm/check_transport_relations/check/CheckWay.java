@@ -41,11 +41,8 @@ public class CheckWay extends AbstractCheck
 		{
 			/**
 			 * Si le précédent way et l'actuel n'ont ni leur premier ni leur
-			 * dernier point en commun => ils ne sont pas adjacents On lève
-			 * alors une exception
+			 * dernier point en commun => ils ne sont pas adjacents.
 			 * 
-			 * @TODO : n'envoyer qu'un message d'erreur et continuer le
-			 *       traitement
 			 */
 			if( !areContiguousWays( way, lastWay ) )
 			{
@@ -62,6 +59,7 @@ public class CheckWay extends AbstractCheck
 		}
 
 		// On pointe sur le 'way' en cours
+		way.setDirection();
 		LastElements.setLastWay( way );
 
 		return true;
