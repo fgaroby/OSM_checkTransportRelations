@@ -57,17 +57,30 @@ public abstract class AbstractCheck implements ICheck
 	@Override
 	public boolean check( RelationMember rm ) throws OsmTransferException
 	{
+		// Is it a node ?
 		if( rm.getType().equals( OsmPrimitiveType.NODE ) )
 		{
-			return this.check.setState( this.check.cStopPosition ).check( rm.getMember() );
+			// Is it a 'stop position' node ?
+			if( rm.getRole().equals( "stop" ) )
+				this.check.setState( this.check.cStopPosition );
+			// Or is it a 'platform' node ?
+			else if( rm.getRole().equals( "platform" ) )
+				this.check.setState( this.check.cPlatform );
+
+			return this.check.cState.check( rm.getMember() );
+
 		}
 
+		// Or is it a way ?
 		else if( rm.getType().equals( OsmPrimitiveType.WAY ) )
 		{
+			// No role ? It's a 'way'
 			if( !rm.hasRole() )
 			{
-				return this.check.setState( this.check.cWay ).check( rm.getMember() );
+				return this.check.setState( this.check.cWay ).check(
+				        rm.getMember() );
 			}
+			// Has a role ? It's a 'platform' or a 'station'
 			else if( !rm.getRole().equals( "platform" ) )
 			{
 				Log.log( tr(
@@ -79,12 +92,12 @@ public abstract class AbstractCheck implements ICheck
 
 			return check( rm.getMember() );
 		}
+		// Anything else ? Not supported...
 		else
 		{
-			Log.log( tr(
-			        "[{0}]The type {1} is not supported !",
+			Log.log( tr( "[{0}]The type {1} is not supported !",
 			        CheckPlatform.class.getSimpleName(), rm.getType() ) );
-			
+
 			return false;
 		}
 	}
