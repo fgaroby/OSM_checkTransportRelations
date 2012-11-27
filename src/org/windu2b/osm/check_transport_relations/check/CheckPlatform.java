@@ -93,6 +93,8 @@ public class CheckPlatform extends AbstractCheck
 			return false;
 		}
 
+		LastElements.setLastStopPosition( null );
+
 		return true;
 	}
 }
