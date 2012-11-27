@@ -20,7 +20,7 @@ public final class LastElements
 	protected static Node	  lastStopPosition	= null;
 
 
-	protected static Relation	lastStopArea	   = null;
+	protected static Relation	lastStopArea	= null;
 
 
 
@@ -40,9 +40,11 @@ public final class LastElements
 	 * @param lastWay
 	 *            the lastWay to set
 	 */
-	public static final void setLastWay( Way lastWay )
+	public static final Way setLastWay( Way lastWay )
 	{
 		LastElements.lastWay = lastWay;
+
+		return lastWay;
 	}
 
 
@@ -63,9 +65,11 @@ public final class LastElements
 	 * @param lastStopPosition
 	 *            the lastStopPosition to set
 	 */
-	public static final void setLastStopPosition( Node lastStopPosition )
+	public static final Node setLastStopPosition( Node lastStopPosition )
 	{
 		LastElements.lastStopPosition = lastStopPosition;
+
+		return lastStopPosition;
 	}
 
 
@@ -83,22 +87,24 @@ public final class LastElements
 
 
 	/**
-	 * @param stopArea
+	 * @param lastStopArea
 	 *            the stopArea to set
 	 */
-	public static final void setLastStopArea( Relation stopArea )
+	public static final Relation setLastStopArea( Relation lastStopArea )
 	{
-		LastElements.lastStopArea = stopArea;
+		LastElements.lastStopArea = lastStopArea;
+
+		return lastStopArea;
 	}
 
 
 
 
 	public static void reset()
-    {
-	    LastElements.lastStopPosition = null;
-	    LastElements.lastWay = null;
-	    LastElements.lastStopArea = null;
-    }
+	{
+		LastElements.lastStopPosition = null;
+		LastElements.lastWay = null;
+		LastElements.lastStopArea = null;
+	}
 
 }
