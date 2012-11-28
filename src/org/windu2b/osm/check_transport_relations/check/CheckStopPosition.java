@@ -110,8 +110,6 @@ public class CheckStopPosition extends AbstractCheck
 						        "[{0}]The node {1} has not to be the last node of the forward-direction way {2} !",
 						        CheckStopPosition.class.getSimpleName(),
 						        node.getId(), lastWay.getId() ) );
-
-						return false;
 					}
 				break;
 
@@ -122,8 +120,6 @@ public class CheckStopPosition extends AbstractCheck
 						        "[{0}]The node {1} has not to be the first node of the backward-direction way {2} !",
 						        CheckStopPosition.class.getSimpleName(),
 						        node.getId(), lastWay.getId() ) );
-
-						return false;
 					}
 				break;
 
