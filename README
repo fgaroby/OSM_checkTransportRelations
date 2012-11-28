@@ -1,0 +1,63 @@
+Supplemental information for JOSM -- the Java OpenStreetMap Editor
+
+=============================================================================
+            I. Install & Launch
+=============================================================================
+
+Installation notes
+------------------
+To run OSM_checkTransportRelations, you need:
+
+* The OSM_checkTransportRelations code-source
+* Java Runtime Environment (JRE) 1.6, or later.
+
+
+How to get Java Runtime Environment
+-----------------------------------
+You need JRE Version 1.6 (also called Java 6), or later.
+
+Microsoft Windows users should visit http://www.java.com
+and download the latest Java executable for Windows systems.
+
+Linux users should visit http://www.oracle.com/technetwork/java/index.html
+There is a Linux binary installer, which you must execute from a console, or
+use the mechanism of your distribution's packaging system.
+
+
+How to launch
+-------------
+Microsoft Windows users launch by double-clicking on the .jar file.
+If this does not work, open a command shell and type
+"java -jar josm-latest.jar"  in the directory that holds the file. (Please
+replace josm-latest.jar with the name of your .jar file, if you aren't using
+the latest version.)
+
+Under Linux, open a shell, go to the file directory and type
+"java -jar josm-latest.jar" to launch. If this does not work, try to set
+your JAVA_HOME variable to the java executable location (the root location,
+not the bin).
+
+MacOS X users just click on the .jar file icon.
+
+=============================================================================
+            II. Development
+=============================================================================
+
+How to get the source code
+--------------------------
+Download it directly from the git at
+https://github.com/windu2b/OSM_checkTransportRelations. To use the command line git client, type
+
+git clone https://github.com/windu2b/OSM_checkTransportRelations
+
+
+Files & directories
+-------------------
+This is an overview of the files and directories in the OSM_checkTransportRelations code repository:
+- CONTRIBUTION              list of major code contributors
+- gpl-2.0.txt, gpl-3.0.txt  full text of the GNU General Public License
+- LICENSE                   the JOSM license terms
+- README                    this file
+- src/                      the source code of the program
+- test/                     automated software tests
+    - unit/                 unit tests (source code)
