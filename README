@@ -1,4 +1,4 @@
-Supplemental information for JOSM -- the Java OpenStreetMap Editor
+Supplemental information for OSM_checkTransportRelations -- the Java Public Transport Relation-validator
 
 =============================================================================
             I. Install & Launch
@@ -8,7 +8,7 @@ Installation notes
 ------------------
 To run OSM_checkTransportRelations, you need:
 
-* The OSM_checkTransportRelations code-source
+* The OSM_checkTransportRelations source-code
 * Java Runtime Environment (JRE) 1.6, or later.
 
 
