@@ -613,7 +613,7 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 
 	public boolean isThisKind( String key )
 	{
-		return this.getKeys().containsKey( key ) == true;
+		return this.hasKey( key );
 	}
 
 
@@ -621,14 +621,14 @@ public abstract class AbstractPrimitive implements Tagged, IPrimitive
 
 	public boolean isThisKind( String key, String value )
 	{
-		return this.getKeys().containsKey( key )
+		return this.hasKey( key )
 		        && this.getKeys().get( key ).equals( value );
 	}
 
 
 
 
-	public boolean isThisKing( Tag tag )
+	public boolean isThisKind( Tag tag )
 	{
 		if( tag.getValue() != null && !tag.getValue().isEmpty() )
 			return this.isThisKind( tag.getKey(), tag.getValue() );
