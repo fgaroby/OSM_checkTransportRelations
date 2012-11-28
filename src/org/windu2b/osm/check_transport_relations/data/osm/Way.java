@@ -3,15 +3,30 @@ package org.windu2b.osm.check_transport_relations.data.osm;
 import java.util.Arrays;
 import java.util.List;
 
+import org.windu2b.osm.check_transport_relations.check.LastElements;
 import org.windu2b.osm.check_transport_relations.tools.CopyList;
 
 public class Way extends OsmPrimitive implements IWay
 {
 	/**
+	 * @author windu
+	 * 
+	 */
+	public enum Direction
+	{
+		FORWARD, BACKWARD;
+	}
+
+
+
+	/**
 	 * All way nodes in this way
 	 * 
 	 */
-	private Node[]	nodes	= new Node[0];
+	private Node[]	      nodes	      = new Node[0];
+
+
+	private Way.Direction	direction	= Direction.FORWARD;
 
 
 
@@ -273,5 +288,45 @@ public class Way extends OsmPrimitive implements IWay
 		String tagsDesc = "tags=" + getKeys();
 		return "{Way id=" + getUniqueId() + " version=" + getVersion() + " "
 		        + nodesDesc + tagsDesc + "}";
+	}
+
+
+
+
+	public Way setDirection()
+	{
+		Way lastWay = LastElements.getLastWay();
+		if( lastWay != null )
+		{
+			if( lastWay.getLastNode().equals( this.getLastNode() )
+			        || lastWay.getFirstNode().equals( this.getLastNode() ) )
+			{
+				return this.setDirection( Direction.BACKWARD );
+			}
+			else
+			{
+				return this.setDirection( Direction.FORWARD );
+			}
+		}
+
+		return this;
+	}
+
+
+
+
+	public Way setDirection( Way.Direction direction )
+	{
+		this.direction = direction;
+
+		return this;
+	}
+
+
+
+
+	public Way.Direction getDirection()
+	{
+		return this.direction;
 	}
 }

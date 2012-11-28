@@ -284,23 +284,44 @@ public abstract class OsmPrimitive extends AbstractPrimitive implements
 
 	protected DataSet loadRelations() throws OsmTransferException
 	{
-		/*if( isIncomplete() )
-		{*/
-			OsmServerReader reader = new OsmServerBackreferenceReader( getId(),
-			        this.getType(), true );
-			DataSet ds = reader.parseOsm( null );
+		/*
+		 * if( isIncomplete() ) {
+		 */
+		OsmServerReader reader = new OsmServerBackreferenceReader( getId(),
+		        this.getType(), true );
+		DataSet ds = reader.parseOsm( null );
 
-			if( getDataSet() != null )
-			{
-				DataSetMerger dm = new DataSetMerger( getDataSet(), ds );
-				dm.merge();
-			}
-			this.setIncomplete( false );
+		if( getDataSet() != null )
+		{
+			DataSetMerger dm = new DataSetMerger( getDataSet(), ds );
+			dm.merge();
+		}
+		this.setIncomplete( false );
 
-			return ds;
-		/*}
+		return ds;
+		/*
+		 * }
+		 * 
+		 * return getDataSet();
+		 */
+	}
 
-		return getDataSet();*/
+
+
+
+	public OsmPrimitive addRelation( Relation relation )
+	{
+		boolean locked = writeLock();
+		try
+		{
+			dataSet.addPrimitive( relation );
+		}
+		finally
+		{
+			writeUnlock( locked );
+		}
+
+		return this;
 	}
 
 

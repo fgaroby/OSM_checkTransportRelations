@@ -28,7 +28,7 @@ public class PublicTransport
 
 
 
-	public static Relation loadStopArea( OsmPrimitive primitive )
+	public static Relation getStopAreaRelation( OsmPrimitive primitive )
 	        throws OsmTransferException
 	{
 		Relation stopArea = null;
