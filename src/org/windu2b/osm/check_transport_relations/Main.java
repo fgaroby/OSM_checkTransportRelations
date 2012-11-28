@@ -29,7 +29,7 @@ public class Main
 	{
 		if( args.length == 0 )
 		{
-			Log.log( tr( "No relation ID found !" ) );
+			Log.log( tr( "No relation ID found ! Usage : org.windu2b.osm.check_transport_relations.Main <Relation ID>" ) );
 
 			return;
 		}
