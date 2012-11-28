@@ -3,6 +3,7 @@
  */
 package org.windu2b.osm.check_transport_relations;
 
+import static org.windu2b.osm.check_transport_relations.tools.I18n.tr;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -10,6 +11,7 @@ import org.windu2b.osm.check_transport_relations.check.Check;
 import org.windu2b.osm.check_transport_relations.data.osm.DataSet;
 import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitiveType;
 import org.windu2b.osm.check_transport_relations.data.osm.Relation;
+import org.windu2b.osm.check_transport_relations.io.Log;
 import org.windu2b.osm.check_transport_relations.io.OsmServerObjectReader;
 
 /**
@@ -25,7 +27,14 @@ public class Main
 	 */
 	public static void main( String[] args )
 	{
-		int relationId = 2323110;
+		if( args.length == 0 )
+		{
+			Log.log( tr( "No relation ID found !" ) );
+
+			return;
+		}
+
+		int relationId = Integer.parseInt( args[0] );
 		DataSet ds;
 
 		try
@@ -34,13 +43,13 @@ public class Main
 			        relationId, OsmPrimitiveType.RELATION, true );
 			ds = reader.parseOsm( null );
 			Collection<Relation> cRelations = ds.getRelations();
-			for ( Relation r : cRelations )
+			for( Relation r : cRelations )
 			{
 				Check c = new Check( r );
 				c.check();
 			}
 		}
-		catch ( Exception e )
+		catch( Exception e )
 		{
 			e.printStackTrace();
 		}
