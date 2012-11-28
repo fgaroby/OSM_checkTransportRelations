@@ -81,26 +81,23 @@ public class CheckTest
 	public void setAndGetStateTest()
 	{
 		assertNotNull( check.getState() );
-		assertEquals( check.getState(), check.way );
-		
-		check.setState( check.platform );
+		assertEquals( check.getState(), check.cWay );
+
+		check.setState( check.cPlatform );
 		assertNotNull( check.getState() );
-		assertEquals( check.getState(), check.platform );
-		
-		
-		check.setState( check.start );
+		assertEquals( check.getState(), check.cPlatform );
+
+		check.setState( check.cStopPosition );
 		assertNotNull( check.getState() );
-		assertEquals( check.getState(), check.start );
-		
-		
-		check.setState( check.stop_position );
+		assertEquals( check.getState(), check.cStopPosition );
+
+		check.setState( check.cWay );
 		assertNotNull( check.getState() );
-		assertEquals( check.getState(), check.stop_position );
-		
-		
-		check.setState( check.way );
+		assertEquals( check.getState(), check.cWay );
+
+		check.setState( check.cPublicTransport );
 		assertNotNull( check.getState() );
-		assertEquals( check.getState(), check.way );
+		assertEquals( check.getState(), check.cPublicTransport );
 	}
 
 }

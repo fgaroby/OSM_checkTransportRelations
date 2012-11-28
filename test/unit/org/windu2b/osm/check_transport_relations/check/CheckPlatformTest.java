@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.windu2b.osm.check_transport_relations.data.osm.Node;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive;
 import org.windu2b.osm.check_transport_relations.data.osm.Relation;
 import org.windu2b.osm.check_transport_relations.data.osm.RelationMember;
 import org.windu2b.osm.check_transport_relations.data.osm.Way;
@@ -108,7 +109,7 @@ public class CheckPlatformTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
@@ -139,7 +140,7 @@ public class CheckPlatformTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
@@ -158,7 +159,7 @@ public class CheckPlatformTest
 		{
 			// On simule la vérification d'une 'way'
 			LastElements.lastWay = w1;
-			check.state = check.way;
+			check.cState = check.cWay;
 			
 			assertFalse( cp.check( rm1 ) );
 			assertNotNull( LastElements.getLastWay() );
@@ -177,11 +178,11 @@ public class CheckPlatformTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
-	public final void testCheckWithAWayBeforeAFakePlatformNode()
+	public final void testCheckWithAWayBeforeAPlatformNode()
 	{
 		Way w1 = new Way( 49904814 );
 
@@ -212,7 +213,7 @@ public class CheckPlatformTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
@@ -231,14 +232,14 @@ public class CheckPlatformTest
 		{
 			// On simule la vérification d'une 'way'
 			LastElements.lastWay = w1;
-			check.state = check.way;
+			check.cState = check.cWay;
 
 			// On simule la vréification d'un 'stop_position'
 			LastElements.lastStopPosition = nStopPosition;
-			check.state = check.platform;
+			check.cState = check.cPlatform;
 
 			assertTrue( cp.check( rm ) );
-			assertEquals( check.platform, check.state );
+			assertEquals( check.cPlatform, check.cState );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( w1, LastElements.getLastWay() );
 			assertNotNull( LastElements.getLastStopPosition() );
@@ -257,11 +258,11 @@ public class CheckPlatformTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
-	public final void testCheckWithAWayAndAStopPositionBeforeSeveralPlatformNodes()
+	public final void testCheckWithAWayAndAStopPositionNodeBeforeSeveralPlatformNodes()
 	{
 		Way w1 = new Way( 49904814 );
 
@@ -277,18 +278,18 @@ public class CheckPlatformTest
 		{
 			// On simule la vérification d'une 'way'
 			LastElements.lastWay = w1;
-			check.state = check.way;
+			check.cState = check.cWay;
 
 			// On simule la vréification d'un 'stop_position'
 			LastElements.lastStopPosition = nStopPosition;
 			LastElements.lastStopArea = rStopArea;
-			check.state = check.platform;
+			check.cState = check.cPlatform;
 
 			/*
 			 * Platform node 1
 			 */
 			assertTrue( cp.check( rm1 ) );
-			assertEquals( check.platform, check.state );
+			assertEquals( check.cPlatform, check.cState );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( w1, LastElements.getLastWay() );
 			assertNotNull( LastElements.getLastStopPosition() );
@@ -300,7 +301,7 @@ public class CheckPlatformTest
 			 * Platform node 2
 			 */
 			assertTrue( cp.check( rm2 ) );
-			assertEquals( check.platform, check.state );
+			assertEquals( check.cPlatform, check.cState );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( w1, LastElements.getLastWay() );
 			assertNotNull( LastElements.getLastStopPosition() );
@@ -314,5 +315,4 @@ public class CheckPlatformTest
 			e.printStackTrace();
 		}
 	}
-
 }

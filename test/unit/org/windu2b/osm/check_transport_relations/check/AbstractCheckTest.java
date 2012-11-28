@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive;
 import org.windu2b.osm.check_transport_relations.data.osm.RelationMember;
 import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
 
@@ -31,7 +32,7 @@ public class AbstractCheckTest
 	@Before
 	public void setUp() throws Exception
 	{
-		
+
 	}
 
 
@@ -57,17 +58,28 @@ public class AbstractCheckTest
 	public final void testAbstractCheckWithNullCheck()
 	{
 		check = null;
-		
+
 		ac = new AbstractCheck( check )
 		{
 
 			@Override
-			public boolean check( RelationMember rm ) throws OsmTransferException
+			public boolean check( OsmPrimitive op ) throws OsmTransferException
 			{
 				return true;
 			}
+
+
+
+
+			@Override
+			public boolean check( RelationMember rm )
+			        throws OsmTransferException
+			{
+				// TODO Auto-generated method stub
+				return false;
+			}
 		};
-		
+
 		assertNotNull( ac );
 		assertNull( ac.getCheck() );
 	}
@@ -84,17 +96,28 @@ public class AbstractCheckTest
 	public final void testAbstractCheckWithNotNullCheck()
 	{
 		check = new Check();
-		
+
 		ac = new AbstractCheck( check )
 		{
 
 			@Override
-			public boolean check( RelationMember rm ) throws OsmTransferException
+			public boolean check( OsmPrimitive op ) throws OsmTransferException
 			{
 				return true;
 			}
+
+
+
+
+			@Override
+			public boolean check( RelationMember rm )
+			        throws OsmTransferException
+			{
+				// TODO Auto-generated method stub
+				return false;
+			}
 		};
-		
+
 		assertNotNull( ac );
 		assertNotNull( ac.getCheck() );
 	}
@@ -117,19 +140,30 @@ public class AbstractCheckTest
 		{
 
 			@Override
-			public boolean check( RelationMember rm ) throws OsmTransferException
+			public boolean check( OsmPrimitive op ) throws OsmTransferException
 			{
 				return true;
 			}
+
+
+
+
+			@Override
+			public boolean check( RelationMember rm )
+			        throws OsmTransferException
+			{
+				// TODO Auto-generated method stub
+				return false;
+			}
 		};
-		
+
 		assertNull( ac.getCheck() );
-		
+
 		check = new Check();
 		ac.setCheck( check );
 		assertNotNull( ac.getCheck() );
 		assertEquals( check, ac.getCheck() );
-		
+
 		ac.setCheck( null );
 		assertNull( ac.getCheck() );
 	}

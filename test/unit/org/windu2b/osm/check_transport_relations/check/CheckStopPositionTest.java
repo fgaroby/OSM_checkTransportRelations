@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.windu2b.osm.check_transport_relations.data.osm.Node;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive;
 import org.windu2b.osm.check_transport_relations.data.osm.PublicTransport;
 import org.windu2b.osm.check_transport_relations.data.osm.RelationMember;
 import org.windu2b.osm.check_transport_relations.data.osm.Way;
@@ -101,7 +102,7 @@ public class CheckStopPositionTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
@@ -131,7 +132,7 @@ public class CheckStopPositionTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
@@ -174,7 +175,7 @@ public class CheckStopPositionTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckStopPosition#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
@@ -205,7 +206,7 @@ public class CheckStopPositionTest
 			assertNotNull( LastElements.getLastStopPosition() );
 			assertEquals( nStopPosition, LastElements.getLastStopPosition() );
 			
-			assertEquals( check.platform, check.state );
+			assertEquals( check.cPlatform, check.cState );
 		}
 		catch( OsmTransferException e )
 		{

@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.windu2b.osm.check_transport_relations.data.osm.Node;
+import org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive;
 import org.windu2b.osm.check_transport_relations.data.osm.RelationMember;
 import org.windu2b.osm.check_transport_relations.data.osm.Way;
 import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
@@ -71,7 +72,7 @@ public class CheckWayTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckWay#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckWay#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
@@ -83,7 +84,7 @@ public class CheckWayTest
 		assertNull( LastElements.getLastWay() );
 		try
 		{
-			cw.check( rm );
+			assertTrue( cw.check( rm ) );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( rm.getWay(), LastElements.getLastWay() );
 		}
@@ -103,7 +104,7 @@ public class CheckWayTest
 	 * .
 	 */
 	@Test
-	public final void testAreContiguousWaysWithSeveralNonContiguousWays()
+	public final void testAreContiguousWays()
 	{
 		Node n1 = new Node( 10 );
 		Node n2 = new Node( 11 );
@@ -141,7 +142,7 @@ public class CheckWayTest
 
 	/**
 	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.check.CheckWay#check(org.windu2b.osm.check_transport_relations.data.osm.RelationMember)}
+	 * {@link org.windu2b.osm.check_transport_relations.check.CheckWay#check(OsmPrimitive)}
 	 * .
 	 */
 	@Test
@@ -161,8 +162,8 @@ public class CheckWayTest
 		lNode2.add( n3 );
 
 		List<Node> lNode3 = new ArrayList<Node>();
+		lNode3.add( n3 );
 		lNode3.add( n4 );
-		lNode3.add( n1 );
 
 		Way w1 = new Way( 1 );
 		w1.setNodes( lNode1 );
@@ -181,15 +182,15 @@ public class CheckWayTest
 		assertNull( LastElements.getLastWay() );
 		try
 		{
-			cw.check( rm1 );
+			assertTrue( cw.check( rm1 ) );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( rm1.getWay(), LastElements.getLastWay() );
 
-			cw.check( rm2 );
+			assertTrue( cw.check( rm2 ) );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( rm2.getWay(), LastElements.getLastWay() );
 
-			cw.check( rm3 );
+			assertTrue( cw.check( rm3 ) );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( rm3.getWay(), LastElements.getLastWay() );
 		}

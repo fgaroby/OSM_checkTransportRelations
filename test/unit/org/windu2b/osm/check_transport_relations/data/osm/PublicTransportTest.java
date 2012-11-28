@@ -43,16 +43,16 @@ public class PublicTransportTest
 
 
 	/**
-	 * Test method for {@link org.windu2b.osm.check_transport_relations.data.osm.PublicTransport#loadStopArea(org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive)}.
+	 * Test method for {@link org.windu2b.osm.check_transport_relations.data.osm.PublicTransport#getStopAreaRelation(org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive)}.
 	 */
 	@Test
-	public final void testLoadStopPositionWithABadStopPositionRelation()
+	public final void testGetStopPositionWithABadStopPositionRelation()
 	{
 		OsmPrimitive op = new Node( 1 );
 		
 		try
         {
-	        Relation r = PublicTransport.loadStopArea( op );
+	        Relation r = PublicTransport.getStopAreaRelation( op );
 	        assertNull( r );
         }
         catch( OsmTransferException e )
@@ -66,16 +66,16 @@ public class PublicTransportTest
 
 
 	/**
-	 * Test method for {@link org.windu2b.osm.check_transport_relations.data.osm.PublicTransport#loadStopArea(org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive)}.
+	 * Test method for {@link org.windu2b.osm.check_transport_relations.data.osm.PublicTransport#getStopAreaRelation(org.windu2b.osm.check_transport_relations.data.osm.OsmPrimitive)}.
 	 */
 	@Test
-	public final void testLoadStopPositionWithAGoodStopPositionRelation()
+	public final void testGetStopPositionWithAGoodStopPositionRelation()
 	{
 		OsmPrimitive op = new Node( 27324070 );
 		
 		try
         {
-	        Relation r = PublicTransport.loadStopArea( op );
+	        Relation r = PublicTransport.getStopAreaRelation( op );
 	        assertNotNull( r );
 	        assertEquals( new Relation( 2521639 ), r );
         }
