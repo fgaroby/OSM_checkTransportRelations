@@ -1,0 +1,1 @@
+Main-class:org.windu2b.osm.check_transport_relations.Main

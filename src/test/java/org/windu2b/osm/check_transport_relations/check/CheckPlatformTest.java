@@ -148,7 +148,7 @@ public class CheckPlatformTest
 	{
 		Node n1 = new Node( 1 );
 		Way w1 = new Way( 3 );
-		RelationMember rm1 = new RelationMember( "", n1 );
+		RelationMember rm1 = new RelationMember( "platform", n1 );
 
 		ICheck cp = new CheckPlatform( check );
 
@@ -242,8 +242,7 @@ public class CheckPlatformTest
 			assertEquals( check.cPlatform, check.cState );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( w1, LastElements.getLastWay() );
-			assertNotNull( LastElements.getLastStopPosition() );
-			assertEquals( nStopPosition, LastElements.getLastStopPosition() );
+			assertNull( LastElements.getLastStopPosition() );
 			assertNull( LastElements.getLastStopArea() );
 		}
 		catch( OsmTransferException e )
@@ -292,8 +291,7 @@ public class CheckPlatformTest
 			assertEquals( check.cPlatform, check.cState );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( w1, LastElements.getLastWay() );
-			assertNotNull( LastElements.getLastStopPosition() );
-			assertEquals( nStopPosition, LastElements.getLastStopPosition() );
+			assertNull( LastElements.getLastStopPosition() );
 			assertNotNull( LastElements.getLastStopArea() );
 			assertEquals( rStopArea, LastElements.lastStopArea );
 
@@ -304,8 +302,7 @@ public class CheckPlatformTest
 			assertEquals( check.cPlatform, check.cState );
 			assertNotNull( LastElements.getLastWay() );
 			assertEquals( w1, LastElements.getLastWay() );
-			assertNotNull( LastElements.getLastStopPosition() );
-			assertEquals( nStopPosition, LastElements.getLastStopPosition() );
+			assertNull( LastElements.getLastStopPosition() );
 			assertNotNull( LastElements.getLastStopArea() );
 			assertEquals( rStopArea, LastElements.lastStopArea );
 		}

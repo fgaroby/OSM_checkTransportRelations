@@ -4,8 +4,6 @@
 package org.windu2b.osm.check_transport_relations.check;
 
 import org.windu2b.osm.check_transport_relations.data.osm.Relation;
-import org.windu2b.osm.check_transport_relations.data.osm.RelationMember;
-import org.windu2b.osm.check_transport_relations.io.IllegalDataException;
 import org.windu2b.osm.check_transport_relations.io.OsmTransferException;
 
 /**

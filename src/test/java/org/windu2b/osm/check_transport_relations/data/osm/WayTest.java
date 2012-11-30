@@ -5,7 +5,9 @@ package org.windu2b.osm.check_transport_relations.data.osm;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +22,13 @@ import org.windu2b.osm.check_transport_relations.io.OsmServerObjectReader;
  */
 public class WayTest
 {
+	Node	n1, n2, n3, n4;
+
+
+	Way	 w1, w2;
+
+
+
 
 	/**
 	 * @throws java.lang.Exception
@@ -27,6 +36,25 @@ public class WayTest
 	@Before
 	public void setUp() throws Exception
 	{
+		n1 = new Node( 1 );
+		n2 = new Node( 2 );
+		n3 = new Node( 3 );
+		n4 = new Node( 4 );
+		
+		List<Node> lNodes1 = new ArrayList<>();
+		lNodes1.add( n1 );
+		lNodes1.add( n2 );
+		lNodes1.add( n3 );
+		
+		List<Node> lNodes2 = new ArrayList<>();
+		lNodes2.add( n3 );
+		lNodes2.add( n4 );
+
+		w1 = new Way( 100 );
+		w1.setNodes( lNodes1 );
+
+		w2 = new Way( 200 );
+		w2.setNodes( lNodes2 );
 	}
 
 
@@ -38,20 +66,10 @@ public class WayTest
 	@After
 	public void tearDown() throws Exception
 	{
-	}
-
-
-
-
-	/**
-	 * Test method for
-	 * {@link org.windu2b.osm.check_transport_relations.data.osm.Way#getLastNode()}
-	 * .
-	 */
-	@Test
-	public final void testGetLastNode()
-	{
-		fail( "Not yet implemented" );
+		n1 = null;
+		n2 = null;
+		n3 = null;
+		n4 = null;
 	}
 
 
@@ -65,75 +83,29 @@ public class WayTest
 	@Test
 	public final void testGetFirstNode()
 	{
-		fail( "Not yet implemented" );
+		assertNotNull( w1.getFirstNode() );
+		assertEquals( n1, w1.getFirstNode() );
+		
+		assertNotNull( w2.getFirstNode() );
+		assertEquals( n3, w2.getFirstNode() );
 	}
 
 
 
 
+	/**
+	 * Test method for
+	 * {@link org.windu2b.osm.check_transport_relations.data.osm.Way#getLastNode()}
+	 * .
+	 */
 	@Test
-	public final void testIsLastNode()
+	public final void testGetLastNode()
 	{
-		Way way = null;
-		Node nStopPosition = new Node( 1844116848 );
-
-		DataSet ds;
-
-		try
-		{
-			OsmServerObjectReader reader = new OsmServerObjectReader( 49904814,
-			        OsmPrimitiveType.WAY, true );
-			ds = reader.parseOsm( null );
-			Collection<Way> cWays = ds.getWays();
-			for( Way w : cWays )
-			{
-				way = w;
-			}
-
-			assertNotNull( way );
-			assertFalse( way.isIncomplete() );
-			assertEquals( nStopPosition, way.getLastNode() );
-			assertFalse( way.getLastNode().equals( new Node( 2019010331 ) ) );
-			assertFalse( way.getFirstNode().equals( new Node( 2019010331 ) ) );
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
-	}
-
-
-
-
-	@Test
-	public final void testIsFirstNode()
-	{
-		Way way = null;
-		Node nStopPosition = new Node( 1844116848 );
-
-		DataSet ds;
-
-		try
-		{
-			OsmServerObjectReader reader = new OsmServerObjectReader(
-			        173638935, OsmPrimitiveType.WAY, true );
-			ds = reader.parseOsm( null );
-			Collection<Way> cWays = ds.getWays();
-			for( Way w : cWays )
-			{
-				way = w;
-			}
-
-			assertNotNull( way );
-			assertFalse( way.isIncomplete() );
-			assertEquals( nStopPosition, way.getFirstNode() );
-			assertFalse( way.getFirstNode().equals( new Node( 2019010335 ) ) );
-			assertFalse( way.getLastNode().equals( new Node( 2019010335 ) ) );
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
+		assertNotNull( w1.getLastNode() );
+		assertEquals( n3, w1.getLastNode() );
+		
+		assertNotNull( w2.getLastNode() );
+		assertEquals( n4, w2.getLastNode() );
 	}
 
 
@@ -199,7 +171,12 @@ public class WayTest
 	@Test
 	public final void testSetAndGetDirection()
 	{
-		fail( "Not yet implemented" );
+		w1.setDirection( Direction.FORWARD );
+		LastElements.setLastWay( w1 );
+		w2.setDirection();
+		
+		assertNotNull( w2.getDirection() );
+		assertEquals( Direction.FORWARD, w2.getDirection() );
 	}
 
 }

@@ -81,6 +81,10 @@ public class CheckTest
 	public void setAndGetStateTest()
 	{
 		assertNotNull( check.getState() );
+		assertEquals( check.getState(), check.cPublicTransport );
+
+		check.setState( check.cWay );
+		assertNotNull( check.getState() );
 		assertEquals( check.getState(), check.cWay );
 
 		check.setState( check.cPlatform );

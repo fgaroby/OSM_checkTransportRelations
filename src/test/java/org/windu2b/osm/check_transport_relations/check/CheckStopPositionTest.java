@@ -190,7 +190,7 @@ public class CheckStopPositionTest
 		Way w1 = new Way( 3 );
 		w1.setNodes( lNodes );
 
-		RelationMember rm1 = new RelationMember( "stop_position", nStopPosition );
+		RelationMember rm1 = new RelationMember( "stop", nStopPosition );
 
 		ICheck csp = new CheckStopPosition( check );
 

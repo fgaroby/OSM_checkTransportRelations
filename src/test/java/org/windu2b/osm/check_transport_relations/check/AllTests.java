@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith( Suite.class )
 @SuiteClasses( { AbstractCheckTest.class, CheckPlatformTest.class,
-        CheckStopPositionTest.class, CheckWayTest.class } )
+        CheckStopPositionTest.class, CheckTest.class, CheckWayTest.class } )
 public class AllTests
 {
 
