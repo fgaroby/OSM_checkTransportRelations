@@ -34,19 +34,40 @@ public class Main
 			return;
 		}
 
-		int relationId = Integer.parseInt( args[0] );
+		/*
+		 * On découpe le paramètre d'entrée en autant d'id de relations que
+		 * possible
+		 */
+		String[] ids = args[0].split( ";" );
 		DataSet ds;
 
 		try
 		{
-			OsmServerObjectReader reader = new OsmServerObjectReader(
-			        relationId, OsmPrimitiveType.RELATION, true );
-			ds = reader.parseOsm( null );
-			Collection<Relation> cRelations = ds.getRelations();
-			for( Relation r : cRelations )
+			// On boucle sur les id de relation passés en paramètre
+			for( String s : ids )
 			{
-				Check c = new Check( r );
-				c.check();
+				String[] relationId;
+				if( s.contains( "-" ) )
+					relationId = s.split( "-" );
+				else
+				{
+					relationId = new String[1];
+					relationId[0] = s;
+				}
+
+				for( String idx : relationId )
+				{
+					OsmServerObjectReader reader = new OsmServerObjectReader(
+					        Integer.parseInt( idx ), OsmPrimitiveType.RELATION,
+					        true );
+					ds = reader.parseOsm( null );
+					Collection<Relation> cRelations = ds.getRelations();
+					for( Relation r : cRelations )
+					{
+						Check c = new Check( r );
+						c.check();
+					}
+				}
 			}
 		}
 		catch( Exception e )
@@ -54,5 +75,4 @@ public class Main
 			e.printStackTrace();
 		}
 	}
-
 }

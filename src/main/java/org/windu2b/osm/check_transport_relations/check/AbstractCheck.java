@@ -85,18 +85,45 @@ public abstract class AbstractCheck implements ICheck
 			{
 				Log.log( tr(
 				        "[{0}]RelationMember {1} has not the role 'platform' !",
-				        CheckPlatform.class.getSimpleName(), rm.getMember()
+				        AbstractCheck.class.getSimpleName(), rm.getMember()
 				                .getId() ) );
 				return false;
 			}
 
 			return check( rm.getMember() );
 		}
+
+		// Or is it a relation ?
+		else if( rm.getType().equals( OsmPrimitiveType.RELATION ) )
+		{
+			// Is it a 'route' ?
+			if( rm.getMember().isThisKind( "type", "route" ) )
+			{
+				return this.check.setState( this.check.cRoute ).check(
+				        rm.getMember() );
+			}
+			// Or a 'route_master' ?
+			else if( rm.getMember().isThisKind( "type", "route_master" ) )
+			{
+				return this.check.setState( this.check.cRoute_master ).check(
+				        rm.getMember() );
+			}
+			// Anything else ? Error
+			else
+			{
+				Log.log( tr(
+				        "[{0}]RelationMember {1} is neither a 'route' nor a 'route_master' relation !",
+				        AbstractCheck.class.getSimpleName(), rm.getMember()
+				                .getId() ) );
+				return false;
+			}
+		}
+
 		// Anything else ? Not supported...
 		else
 		{
 			Log.log( tr( "[{0}]The type {1} is not supported !",
-			        CheckPlatform.class.getSimpleName(), rm.getType() ) );
+			        AbstractCheck.class.getSimpleName(), rm.getType() ) );
 
 			return false;
 		}

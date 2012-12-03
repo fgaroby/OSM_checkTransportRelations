@@ -24,7 +24,10 @@ public class Check
 	ICheck	 cState;
 
 
-	ICheck	 cPublicTransport;
+	ICheck	 cRoute;
+
+
+	ICheck	 cRoute_master;
 
 
 	Relation	relation;
@@ -37,9 +40,10 @@ public class Check
 		this.cWay = new CheckWay( this );
 		this.cStopPosition = new CheckStopPosition( this );
 		this.cPlatform = new CheckPlatform( this );
-		this.cPublicTransport = new CheckPublicTransport( this );
+		this.cRoute = new CheckRoute( this );
+		this.cRoute_master = new CheckRouteMaster( this );
 
-		this.cState = this.cPublicTransport;
+		this.cState = this.cRoute;
 
 	}
 
@@ -49,6 +53,11 @@ public class Check
 	public Check( Relation r )
 	{
 		this();
+
+		// Cas où on traite une 'route_master'
+		if( r.isThisKind( "type", "route_master" ) )
+			this.setState( this.cRoute_master );
+
 		this.relation = r;
 	}
 
