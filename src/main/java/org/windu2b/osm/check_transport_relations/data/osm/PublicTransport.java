@@ -47,7 +47,8 @@ public class PublicTransport
 		{
 			Log.log( tr(
 			        "[{0}]The {1} {2} is not in a 'public_transport=stop_area' relation !",
-			        PublicTransport.class.getSimpleName(), primitive.getDisplayType(), primitive.getId() ) );
+			        PublicTransport.class.getSimpleName(),
+			        primitive.getDisplayType(), primitive.getId() ) );
 		}
 
 		return stopArea;

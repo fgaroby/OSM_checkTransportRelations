@@ -64,10 +64,11 @@ public class CheckPlatform extends AbstractCheck
 				        lastStopArea ) )
 				{
 					Log.log( tr(
-					        "[{0}]The {1} {2} is not in the same 'public_transport=stop_area' ({3}) than the previous 'public_transport='stop_position' !",
-					        CheckPlatform.class.getSimpleName(),
-					        op.getDisplayType(), op.getId(),
-					        lastStopArea.getId() ) );
+					        "[{0}]The {1} {2} is not in the same 'public_transport=stop_area' ({3}) than the previous 'public_transport='stop_position' {4} !",
+					        CheckPlatform.class.getSimpleName(), op
+					                .getDisplayType(), op.getId(), lastStopArea
+					                .getId(), LastElements
+					                .getLastStopPosition().getId() ) );
 
 					return false;
 				}

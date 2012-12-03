@@ -38,6 +38,8 @@ public class CheckStopPosition extends AbstractCheck
 	@Override
 	public boolean check( OsmPrimitive op ) throws OsmTransferException
 	{
+		boolean validation = true;
+
 		/*
 		 * Is this a 'node' ?
 		 */
@@ -61,7 +63,7 @@ public class CheckStopPosition extends AbstractCheck
 					        CheckStopPosition.class.getSimpleName(),
 					        node.getId(), lastStopPosition.getId() ) );
 
-					return false;
+					validation = false;
 				}
 			}
 			/*
@@ -73,7 +75,7 @@ public class CheckStopPosition extends AbstractCheck
 				        "[{0}]}The node {1} is not a public_transport=stop_position",
 				        CheckStopPosition.class.getSimpleName(), node.getId() ) );
 
-				return false;
+				validation = false;
 			}
 
 			/*
@@ -84,7 +86,7 @@ public class CheckStopPosition extends AbstractCheck
 				Log.log( tr( "[{0}]No way was found before the node {1} !",
 				        CheckStopPosition.class.getSimpleName(), node.getId() ) );
 
-				return false;
+				validation = false;
 			}
 
 			/*
@@ -92,47 +94,50 @@ public class CheckStopPosition extends AbstractCheck
 			 */
 			else if( !lastWay.contains( node ) )
 			{
-				Log.log( tr( "[{0}]The way {1} doesn't contain the node {2} !",
+				Log.log( tr( "[{0}]The way {1} doesn''t contain the node {2} !",
 				        CheckStopPosition.class.getSimpleName(),
 				        lastWay.getId(), node.getId() ) );
 
-				return false;
+				validation = false;
 			}
 			/*
 			 * Is this node not the last/first node of the last way ?
 			 */
-			switch( lastWay.getDirection() )
+			if( lastWay.getDirection() != null )
 			{
-				case FORWARD :
-					if( lastWay.getLastNode().equals( node ) )
-					{
-						Log.log( tr(
-						        "[{0}]The node {1} has not to be the last node of the forward-direction way {2} !",
-						        CheckStopPosition.class.getSimpleName(),
-						        node.getId(), lastWay.getId() ) );
-					}
-				break;
+				switch( lastWay.getDirection() )
+				{
+					case FORWARD :
+						if( lastWay.getLastNode().equals( node ) )
+						{
+							Log.log( tr(
+							        "[{0}]The node {1} has not to be the last node of the forward-direction way {2} !",
+							        CheckStopPosition.class.getSimpleName(),
+							        node.getId(), lastWay.getId() ) );
+						}
+					break;
 
-				case BACKWARD :
-					if( lastWay.getFirstNode().equals( node ) )
-					{
-						Log.log( tr(
-						        "[{0}]The node {1} has not to be the first node of the backward-direction way {2} !",
-						        CheckStopPosition.class.getSimpleName(),
-						        node.getId(), lastWay.getId() ) );
-					}
-				break;
+					case BACKWARD :
+						if( lastWay.getFirstNode().equals( node ) )
+						{
+							Log.log( tr(
+							        "[{0}]The node {1} has not to be the first node of the backward-direction way {2} !",
+							        CheckStopPosition.class.getSimpleName(),
+							        node.getId(), lastWay.getId() ) );
+						}
+					break;
 
-				// Cas où la direction de 'lastWay' n'avait pas été
-				// préalablement définie (premier way, ou coupure dans la
-				// continuité)
-				default :
-					if( lastWay.getLastNode().equals( node ) )
-						lastWay.setDirection( Direction.BACKWARD );
-					else
-						lastWay.setDirection( Direction.FORWARD );
-				break;
-
+				}
+			}
+			// Cas où la direction de 'lastWay' n'avait pas été
+			// préalablement définie (premier way, ou coupure dans la
+			// continuité)
+			else
+			{
+				if( lastWay.getLastNode().equals( node ) )
+					lastWay.setDirection( Direction.BACKWARD );
+				else
+					lastWay.setDirection( Direction.FORWARD );
 			}
 			// On récupère la relation 'stop_area' à laquelle appartient ce
 			// 'stop_position'
@@ -162,11 +167,11 @@ public class CheckStopPosition extends AbstractCheck
 			        CheckStopPosition.class.getSimpleName(),
 			        op.getDisplayType(), op.getId() ) );
 
-			return false;
+			validation = false;
 		}
 
 		this.check.setState( this.check.cPlatform );
 
-		return true;
+		return validation;
 	}
 }
