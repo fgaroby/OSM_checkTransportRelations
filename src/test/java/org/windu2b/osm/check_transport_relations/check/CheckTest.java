@@ -81,7 +81,7 @@ public class CheckTest
 	public void setAndGetStateTest()
 	{
 		assertNotNull( check.getState() );
-		assertEquals( check.getState(), check.cPublicTransport );
+		assertEquals( check.getState(), check.cRoute );
 
 		check.setState( check.cWay );
 		assertNotNull( check.getState() );
@@ -99,9 +99,9 @@ public class CheckTest
 		assertNotNull( check.getState() );
 		assertEquals( check.getState(), check.cWay );
 
-		check.setState( check.cPublicTransport );
+		check.setState( check.cRoute );
 		assertNotNull( check.getState() );
-		assertEquals( check.getState(), check.cPublicTransport );
+		assertEquals( check.getState(), check.cRoute );
 	}
 
 }
